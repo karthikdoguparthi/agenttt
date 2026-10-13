@@ -309,6 +309,7 @@
     `"Waah miyan! The aroma of cardamom is filling Lad Bazaar!"`,
     `"Don't let the biscuits break! Dip them hot in cutting chai!"`,
     `"Chhotu is pouring chai from two feet up without spilling a drop!"`,
+    `"Arey baap re! Who put a whole elaichi in the tray?! Mood ruined, minus points!"`,
     `"Evening rush at Charminar! Keep the dum pressure roaring!"`,
     `"Hyderabadis are lining up from Nimrah Cafe all the way to Mecca Masjid!"`
   ];
@@ -459,10 +460,10 @@
       this.rotation = 0;
       this.rotSpeed = (Math.random() - 0.5) * 6;
 
-      // Item types: 72% Regular Osmania, 18% Special Golden Osmania, 10% Burnt Hazard
+      // Item types: 72% Regular Osmania, 18% Special Golden Osmania, 10% Raw Elaichi / Cardamom Hazard
       const rand = Math.random();
       if (rand < 0.12) {
-        this.type = 'hazard'; // Burnt biscuit
+        this.type = 'elaichi'; // Whole Elaichi / Cardamom Pod (unwanted spice bit)
       } else if (rand < 0.32) {
         this.type = 'golden'; // Zafrani Golden biscuit
       } else {
@@ -480,9 +481,9 @@
       } else if (this.type === 'golden') {
         biscuitEl.classList.add('special-golden');
         biscuitEl.textContent = '⭐ GOLD';
-      } else if (this.type === 'hazard') {
-        biscuitEl.classList.add('burnt-hazard');
-        biscuitEl.textContent = 'BURNT!';
+      } else if (this.type === 'elaichi') {
+        biscuitEl.classList.add('elaichi-hazard');
+        biscuitEl.textContent = '🌱 ELAICHI';
       }
 
       this.el.appendChild(biscuitEl);
@@ -527,7 +528,7 @@
       // Check offscreen bottom
       if (this.y > rect.height + 40) {
         this.destroy();
-        if (this.type !== 'hazard') {
+        if (this.type !== 'elaichi') {
           // Missed non-hazard biscuit breaks combo streak
           resetCombo();
         }
@@ -540,11 +541,12 @@
     catchItem(clientX, clientY) {
       sfx.init();
 
-      if (this.type === 'hazard') {
+      if (this.type === 'elaichi') {
         sfx.playHazardSound();
-        spawnBurst(clientX, clientY, '#ef4444', 20);
-        showFloatingNumber(clientX, clientY, '-₹25! BURNT!', '#ef4444');
+        spawnBurst(clientX, clientY, '#10b981', 22);
+        showFloatingNumber(clientX, clientY, '-₹25 & -50 PTS! WHOLE ELAICHI! 🤢', '#ef4444');
         state.coins = Math.max(0, state.coins - 25);
+        state.score = Math.max(0, state.score - 50);
         resetCombo();
       } else {
         state.biscuitsCaught += 1;

@@ -557,11 +557,14 @@ body {
   100% { transform: scale(1.1); }
 }
 
-.osmania-biscuit.burnt-hazard {
-  background: radial-gradient(circle at 30% 30%, #475569 0%, #1e293b 50%, #020617 100%);
-  border: 3px solid #ef4444;
-  color: #ef4444;
-  box-shadow: 0 0 14px rgba(239, 68, 68, 0.6);
+.osmania-biscuit.elaichi-hazard {
+  background: radial-gradient(circle at 35% 30%, #6ee7b7 0%, #10b981 40%, #047857 75%, #064e3b 100%);
+  border: 2.5px solid #a7f3d0;
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+  color: #ecfdf5;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.7), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+  font-size: 0.6rem;
+  letter-spacing: -0.2px;
 }
 
 /* Catcher Plate */
