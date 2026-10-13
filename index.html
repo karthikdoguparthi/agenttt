@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Charminar Chai & Biscuit Rush | Fast-Paced Hyderabadi Arcade Clicker</title>
+  <meta name="description" content="A fast-paced incremental arcade game set in Hyderabad. Catch falling Osmania biscuits, brew endless Irani Chai, unlock Irani cafe upgrades, and beat the clock!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Rozha+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Ambient Audio Indicator / Visual FX Canvas -->
+  <canvas id="fx-canvas"></canvas>
+
+  <div id="app-container">
+    <!-- Top Header Bar -->
+    <header class="top-nav">
+      <div class="logo-group">
+        <span class="logo-badge">☕ IRANI SPECIAL</span>
+        <h1 class="main-title">Charminar Chai &amp; Biscuit Rush</h1>
+      </div>
+      <div class="quick-stats">
+        <div class="stat-pill timer-pill" id="timer-pill">
+          <span class="pill-label">⏳ RUSH TIMER</span>
+          <span class="pill-val" id="time-display">60.0s</span>
+        </div>
+        <div class="stat-pill coins-pill">
+          <span class="pill-label">🪙 HYDERABADI RUPEES</span>
+          <span class="pill-val" id="coins-display">₹0</span>
+        </div>
+        <div class="stat-pill score-pill">
+          <span class="pill-label">⭐ REPUTATION SCORE</span>
+          <span class="pill-val" id="score-display">0</span>
+        </div>
+        <button id="sound-toggle-btn" class="icon-btn" title="Toggle Sound FX">🔊</button>
+      </div>
+    </header>
+
+    <!-- Main Game Arena -->
+    <main class="game-stage">
+      
+      <!-- Left Column: The Irani Chai Brewing Deck -->
+      <section class="game-card chai-deck-panel">
+        <div class="card-header">
+          <h2>🫖 Irani Chai Bhatti</h2>
+          <span class="subtext">Click rapidly to boil dum chai & pour endless cutting cups!</span>
+        </div>
+
+        <div class="chai-brew-station">
+          <!-- Chai Kettle & Steam Animation -->
+          <div class="kettle-stage" id="chai-kettle-stage">
+            <div class="steam-container" id="steam-container">
+              <span class="steam-puff"></span>
+              <span class="steam-puff"></span>
+              <span class="steam-puff"></span>
+            </div>
+            <div class="kettle-graphic" id="kettle-btn" role="button" tabindex="0" aria-label="Brew Irani Chai">
+              <div class="kettle-glow"></div>
+              <div class="kettle-body">
+                <div class="kettle-spout"></div>
+                <div class="kettle-lid"></div>
+                <div class="kettle-handle"></div>
+                <div class="dum-liquid" id="dum-liquid"></div>
+              </div>
+              <div class="kettle-label">TAP TO DUM! ♨️</div>
+            </div>
+          </div>
+
+          <!-- Heat / Brew Progress Gauge -->
+          <div class="brew-gauge-container">
+            <div class="gauge-meta">
+              <span class="gauge-title">Dum Pressure</span>
+              <span class="gauge-pct" id="dum-pct">0%</span>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-fill" id="dum-progress-bar"></div>
+            </div>
+            <p class="gauge-hint">Fill gauge to auto-serve a piping hot Irani Chai cup (+Bonus ₹)!</p>
+          </div>
+
+          <!-- Quick Pour Clicker Cup -->
+          <div class="pour-action-area">
+            <button id="chai-pour-btn" class="action-btn chai-btn">
+              <span class="btn-icon">☕</span>
+              <div class="btn-text">
+                <strong>Serve Cutting Chai!</strong>
+                <span class="btn-sub" id="chai-earn-label">+1 Cup (+₹5)</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Chai Stats Breakdown -->
+          <div class="mini-metrics">
+            <div class="metric-box">
+              <span class="m-val" id="cups-served-display">0</span>
+              <span class="m-lbl">Cups Served</span>
+            </div>
+            <div class="metric-box">
+              <span class="m-val" id="chai-rate-display">0/s</span>
+              <span class="m-lbl">Auto Chhotu Pour</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Center Column: Biscuit Catcher Falling Arena -->
+      <section class="game-card arena-panel">
+        <div class="card-header arena-header">
+          <div class="arena-title-wrap">
+            <h2>🍪 Osmania Biscuit Sky-Drop</h2>
+            <span class="subtext">Catch buttery biscuits, avoid salted burns, click or steer plate!</span>
+          </div>
+          <div class="combo-badge" id="combo-badge">
+            <span id="combo-number">0x</span>
+            <span class="combo-label">COMBO</span>
+          </div>
+        </div>
+
+        <div class="falling-sky" id="sky-area">
+          <div class="sky-instructions" id="sky-hint">
+            <span>👇 Move mouse/touch or click falling Osmania biscuits directly!</span>
+          </div>
+
+          <!-- Golden Biscuit Catch Tray / Plate -->
+          <div class="catcher-plate" id="catcher-plate">
+            <div class="plate-dish">
+              <span class="plate-decor">⚜️ OSMANIA TRAY ⚜️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="arena-footer">
+          <div class="streak-meter-wrap">
+            <div class="streak-text">
+              <span>Biscuit Catch Streak:</span>
+              <strong id="streak-display">0</strong>
+            </div>
+            <div class="streak-bonus" id="streak-bonus-text">x1.0 Multiplier</div>
+          </div>
+          <button id="emergency-frenzy-btn" class="frenzy-btn" disabled>
+            ⚡ HYDERABADI DUM FRENZY (READY: <span id="frenzy-gauge-txt">0%</span>)
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Column: Irani Cafe Upgrades & Perks -->
+      <section class="game-card cafe-upgrades-panel">
+        <div class="card-header">
+          <h2>🏬 Cafe Upgrades</h2>
+          <span class="subtext">Hire Chhotus, upgrade Mawa, stretch timer &amp; multiply cash!</span>
+        </div>
+
+        <div class="upgrades-list" id="upgrades-list">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <div class="achievements-section">
+          <h3>🏆 Cafe Milestones</h3>
+          <div class="badge-tray" id="badge-tray">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Controls & Pause/Restart Banner -->
+    <footer class="bottom-bar">
+      <div class="banner-status" id="live-flavor-text">
+        "Ustaad, garam garam chai tayyar hai! Biscuits are raining over Old City!"
+      </div>
+      <div class="actions-group">
+        <button id="add-time-btn" class="perk-btn" title="Spend ₹50 for +15s extra rush time">
+          ⏱️ Buy +15s Time (₹50)
+        </button>
+        <button id="restart-game-btn" class="ghost-btn">
+          🔄 New Rush Shift
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Game Over / Shift Report Modal -->
+  <div class="modal-backdrop" id="game-over-modal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-ribbon">OLD CITY SHIFT ENDED!</div>
+      <h2 id="modal-heading">Subhanallah! What a Rush!</h2>
+      <p class="modal-sub" id="modal-subtext">The evening rush around Charminar has wrapped up!</p>
+      
+      <div class="modal-stats-grid">
+        <div class="mstat">
+          <span class="mstat-label">Total Chai Cups</span>
+          <span class="mstat-val" id="stat-modal-chai">0</span>
+        </div>
+        <div class="mstat">
+          <span class="mstat-label">Biscuits Caught</span>
+          <span class="mstat-val" id="stat-modal-biscuits">0</span>
+        </div>
+        <div class="mstat">
+          <span class="mstat-label">Coins Earned</span>
+          <span class="mstat-val" id="stat-modal-coins">₹0</span>
+        </div>
+        <div class="mstat">
+          <span class="mstat-label">Highest Combo</span>
+          <span class="mstat-val" id="stat-modal-combo">0x</span>
+        </div>
+        <div class="mstat highlight">
+          <span class="mstat-label">Final Cafe Score</span>
+          <span class="mstat-val" id="stat-modal-score">0</span>
+        </div>
+      </div>
+
+      <div class="modal-rank-box" id="modal-rank">
+        <span class="rank-title">Rank Attained:</span>
+        <h3 class="rank-name" id="rank-name">Irani Chai Novice</h3>
+      </div>
+
+      <div class="modal-actions">
+        <button id="modal-play-again-btn" class="modal-primary-btn">
+          🚀 Start New Shift (60s)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
